@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Игорь Влащенко](https://up.htmlacademy.ru/javascript/16/user/442219).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Фидельман].
 
 ---
 
