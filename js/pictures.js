@@ -13,17 +13,15 @@ var randomInteger = function (min, max) {
 // Функция создания описания для фотографии пользователя:
 var createDescriptionPhoto = function (indexPhoto, maxComments, photoComments, photoDescription) {
   var photoData = {};
-  var indexComments = randomInteger(0, photoComments.length);
-  var indexDescription = randomInteger(0, photoDescription.length);
   photoData.url = 'photos/' + indexPhoto + '.jpg';
   photoData.likes = randomInteger(15, 200);
   // Формируем массив комментариев:
   photoData.comments = [];
   for (var i = 0; i < maxComments; i++) {
-    photoData.comments[i] = photoComments[indexComments];
+    photoData.comments[i] = photoComments[randomInteger(0, photoComments.length)];
   }
-  //
-  photoData.description = photoDescription[indexDescription];
+
+  photoData.description = photoDescription[randomInteger(0, photoDescription.length)];
 
   return photoData;
 };
@@ -45,6 +43,7 @@ var usersDescriptionPhotoList = createUsersDescriptionPhoto(MAX_SUM_COMMENTS, CO
 var usersPictures = document.querySelector('.pictures');
 var userPictureTemplate = document.querySelector('#picture').content
 .querySelector('.picture');
+var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < 25; i++) {
   var userPicture = userPictureTemplate.cloneNode(true);
@@ -53,8 +52,10 @@ for (var i = 0; i < 25; i++) {
   // Выводим последний из оставленных комментариев:
   userPicture.querySelector('.picture__comments').textContent = usersDescriptionPhotoList[i].comments[MAX_SUM_COMMENTS - 1];
 
-  usersPictures.appendChild(userPicture);
+  fragment.appendChild(userPicture);
 }
+
+usersPictures.appendChild(fragment);
 
 // Показываем полноэкранную фотографию пользователя с комментариями:
 var bigPicture = document.querySelector('.big-picture');
@@ -68,18 +69,18 @@ bigPicture.querySelector('.social__caption').textContent = usersDescriptionPhoto
 // Формируем список комментариев под полноэкранной фотографией пользователя:
 var socialComments = document.querySelector('.social__comments');
 var commentTemplate = document.querySelector('.social__comment');
+socialComments.innerHTML = '';
+var fragmentComment = document.createDocumentFragment();
 
 for (var j = 0; j < 5; j++) {
-  var arrComments = document.querySelectorAll('.social__comment');
-  if ((arrComments.length < 5) && (arrComments.length < usersDescriptionPhotoList[0].comments.length)) {
-    // Добавляем еще один блок комментариев:
-    socialComments.appendChild(commentTemplate.cloneNode(true));
-  }
-
   var indexUser = randomInteger(1, 6);
-  arrComments[j].querySelector('.social__picture').src = 'img/avatar-' + indexUser + '.svg';
-  arrComments[j].querySelector('.social__text').textContent = usersDescriptionPhotoList[0].comments[indexUser];
+  commentTemplate.querySelector('.social__picture').src = 'img/avatar-' + indexUser + '.svg';
+  commentTemplate.querySelector('.social__text').textContent = usersDescriptionPhotoList[0].comments[indexUser];
+
+  fragmentComment.appendChild(commentTemplate.cloneNode(true));
 }
+
+socialComments.appendChild(fragmentComment);
 
 // Скрываем счетчик комментариев и возможность загрузки комментариев:
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
