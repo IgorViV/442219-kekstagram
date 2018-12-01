@@ -1,7 +1,7 @@
 'use strict';
 
 var COMMENTS_DATA = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-var MAX_SUM_COMMENTS = 8; // колличество оставленных комментариев для каждого фото (задаем условно)
+var MAX_SUM_COMMENTS = 15; // колличество оставленных комментариев для каждого фото (задаем условно)
 var DESCRIPTION_DATA = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 
 // Функция выбора случайного числа из заданного диапазона:
@@ -15,9 +15,9 @@ var createDescriptionPhoto = function (indexPhoto, maxComments, photoComments, p
   var photoData = {};
   photoData.url = 'photos/' + indexPhoto + '.jpg';
   photoData.likes = randomInteger(15, 200);
-  // Формируем массив комментариев:
-  photoData.comments = [];
-  for (var i = 0; i < maxComments; i++) {
+  photoData.comments = []; // Формируем массив комментариев
+  var randomSumComments = randomInteger(5, maxComments); // Выбираем случайное число комментариев к фотографии
+  for (var i = 0; i < randomSumComments; i++) {
     photoData.comments[i] = photoComments[randomInteger(0, photoComments.length)];
   }
 
@@ -71,10 +71,15 @@ var commentTemplate = document.querySelector('.social__comment');
 socialComments.innerHTML = '';
 var fragmentComment = document.createDocumentFragment();
 
-for (var j = 0; j < 5; j++) {
+var lengthComments = 5; // Максимальное количество отображаемых комментариев
+// if (lengthComments >= usersDescriptionPhotoList[0].comments.length) {
+//   lengthComments = usersDescriptionPhotoList[0].comments.length;
+// }
+
+for (var j = 0; j < lengthComments; j++) {
   var indexUser = randomInteger(1, 6);
   commentTemplate.querySelector('.social__picture').src = 'img/avatar-' + indexUser + '.svg';
-  commentTemplate.querySelector('.social__text').textContent = usersDescriptionPhotoList[0].comments[indexUser];
+  commentTemplate.querySelector('.social__text').textContent = usersDescriptionPhotoList[0].comments[j];
 
   fragmentComment.appendChild(commentTemplate.cloneNode(true));
 }
