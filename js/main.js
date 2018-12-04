@@ -3,6 +3,8 @@
 var COMMENTS_DATA = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var MAX_SUM_COMMENTS = 15; // колличество оставленных комментариев для каждого фото (задаем условно)
 var DESCRIPTION_DATA = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
+var ESC_CODE = 27;
+// var ENTER_CODE = 13;
 
 // Функция выбора случайного числа из заданного диапазона:
 var randomInteger = function (min, max) {
@@ -58,7 +60,8 @@ usersPictures.appendChild(fragment);
 
 // Показываем полноэкранную фотографию пользователя с комментариями:
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+// bigPicture.classList.remove('hidden');
+
 bigPicture.querySelector('.big-picture__img img').src = usersDescriptionPhotoList[0].url;
 bigPicture.querySelector('.likes-count').textContent = usersDescriptionPhotoList[0].likes;
 bigPicture.querySelector('.comments-count').textContent = usersDescriptionPhotoList[0].comments.length;
@@ -89,3 +92,133 @@ socialComments.appendChild(fragmentComment);
 // Скрываем счетчик комментариев и возможность загрузки комментариев:
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+
+// ОБРАБОТЧИКИ СОБЫТИЙ
+
+// Обработчик - выбор файла для редактирования:
+var uploadForm = document.querySelector('.img-upload__form');
+var uploadFileInput = uploadForm.querySelector('#upload-file');
+var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
+var buttonUploadOverlayClose = uploadForm.querySelector('.img-upload__cancel');
+
+
+var escOverlayPress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    uploadOverlayClose();
+  }
+};
+
+var uploadOverlayOpen = function () {
+  uploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', escOverlayPress);
+};
+
+var uploadOverlayClose = function () {
+  uploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', escOverlayPress);
+  uploadFileInput.value = '';
+};
+
+uploadFileInput.addEventListener('change', function () {
+  uploadOverlayOpen();
+});
+
+buttonUploadOverlayClose.addEventListener('click', function () {
+  uploadOverlayClose();
+});
+
+// Обработчик - показ выбранной фотографии в полноэкранном режиме:
+// Пока не сделал
+
+// Применение эффекта для изображения:
+var effectLevel = document.querySelector('.effect-level');
+var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+var effectLevelLine = effectLevel.querySelector('.effect-level__line');
+var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
+var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
+
+// Перемещаем пин фильтра:
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var positionLine = effectLevelLine.getBoundingClientRect(); // Определяем координаты линии перемещения пин фильтра:
+  var widthLine = positionLine.right - positionLine.left;
+  var startPosition = {x: evt.clientX};
+
+  var effectValue = function () {
+    var parametrValue = Math.round((effectLevelPin.offsetLeft) * 100 / (widthLine));
+
+    return parametrValue;
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {x: startPosition.x - moveEvt.clientX};
+    startPosition = {x: moveEvt.clientX};
+    if ((effectLevelPin.offsetLeft - shift.x) < 0) {
+      effectLevelPin.style.left = 0 + 'px';
+    } else if ((effectLevelPin.offsetLeft - shift.x) > widthLine) {
+      effectLevelPin.style.left = widthLine + 'px';
+    } else {
+      effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + 'px';
+    }
+    effectLevelDepth.style.width = effectValue() + '%';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    effectLevelValue.value = effectValue(); // Выходной параметр
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
+// Наложение эффекта:
+var effectsField = document.querySelector('.effects');
+var imgUploadPreview = document.querySelector('.img-upload__preview');
+var currentClassEffect = '';
+
+// Функция установки класса фильтра:
+var setClassEffect = function (currentClass, currentEffects) {
+  if (currentClass) {
+    imgUploadPreview.classList.remove(currentClass);
+  }
+
+  if (currentEffects === 'effect-none') {
+    currentClass = 'hidden';
+    effectLevel.classList.add('hidden');
+  } else if (currentEffects === 'effect-chrome') {
+    currentClass = 'effects__preview--chrome';
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-sepia') {
+    currentClass = 'effects__preview--sepia';
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-marvin') {
+    currentClass = 'effects__preview--marvin';
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-phobos') {
+    currentClass = 'effects__preview--phobos';
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-heat') {
+    currentClass = 'effects__preview--heat';
+    effectLevel.classList.remove('hidden');
+  }
+
+  imgUploadPreview.classList.add(currentClass);
+
+  return currentClass;
+};
+
+effectsField.addEventListener('click', function (evt) {
+  if (evt.target.nodeName === 'INPUT') {
+    var targetId = evt.target.id;
+  }
+
+  currentClassEffect = setClassEffect(currentClassEffect, targetId);
+});
