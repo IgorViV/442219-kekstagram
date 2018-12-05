@@ -130,25 +130,126 @@ buttonUploadOverlayClose.addEventListener('click', function () {
 // Обработчик - показ выбранной фотографии в полноэкранном режиме:
 // Пока не сделал
 
-// Применение эффекта для изображения:
+
+// Алгоритм работы выбора фильтра:
+// 1. Ищем все элементы input в блоке effects;
+var imgUploadPreview = document.querySelector('.img-upload__preview');
+var effectsField = document.querySelector('.effects');
+var effectsRadio = effectsField.querySelectorAll('.effects__radio');
 var effectLevel = document.querySelector('.effect-level');
 var effectLevelValue = effectLevel.querySelector('.effect-level__value');
 var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
 var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
+var setClass = '';
+// 2. Делаем начальный сброс: убираем checked в HTML элементах input (установлен на последнем фильтре);
+for (var k = 0; k < effectsRadio.length; k++) {
+  effectsRadio[k].removeAttribute('checked');
+}
 
-// Перемещаем пин фильтра:
+// 3. Устанавливаем свойство checked на первом элементе;
+effectsRadio[0].checked = true;
+effectLevel.classList.add('hidden');
+
+// 4. Устанавливаем обработчик на клик по блоку input:
+
+// Функция установки класса фильтра на фотографии с учетом выбранного фильтра
+var setClassEffect = function (currentEffects) {
+  imgUploadPreview.removeAttribute('class');
+  imgUploadPreview.setAttribute('class', 'img-upload__preview');
+
+  if (currentEffects === 'effect-none') {
+    effectLevel.classList.add('hidden');
+  } else if (currentEffects === 'effect-chrome') {
+    imgUploadPreview.classList.add('effects__preview--chrome');
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-sepia') {
+    imgUploadPreview.classList.add('effects__preview--sepia');
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-marvin') {
+    imgUploadPreview.classList.add('effects__preview--marvin');
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-phobos') {
+    imgUploadPreview.classList.add('effects__preview--phobos');
+    effectLevel.classList.remove('hidden');
+  } else if (currentEffects === 'effect-heat') {
+    imgUploadPreview.classList.add('effects__preview--heat');
+    effectLevel.classList.remove('hidden');
+  }
+};
+
+// Функция определения ширины линии регулирования интенсивности эффекта
+var widthRegulation = function () {
+  var widthLine = effectLevelLine.getBoundingClientRect().right - effectLevelLine.getBoundingClientRect().left;
+
+  return widthLine;
+};
+
+// Функция установки пин слайдера в исходное состояние - 100%
+var setInitialPin = function () {
+  effectLevelPin.style.left = widthRegulation() + 'px';
+  effectLevelDepth.style.width = effectValue() + '%';
+};
+
+// Функция расчета величины интенсивности эффекта в зависимости от положения ПИН регулятора
+var effectValue = function () {
+  var parametrValue = Math.round((effectLevelPin.offsetLeft) * 100 / widthRegulation());
+
+  return parametrValue;
+};
+
+// Функция установки интенсивности эффекта выбранного фильтра:
+var depthEffect = function (setDepth, setEffect) {
+  var setValue = 0;
+
+  if (setEffect === 'effect-chrome') {
+    setValue = 'grayscale(' + setDepth / 100 + ');';
+    imgUploadPreview.style.filter = setValue;
+  } else if (setEffect === 'effect-chrome') {
+    setValue = 'grayscale(' + setDepth / 100 + ');';
+    imgUploadPreview.style.filter = setValue;
+    imgUploadPreview.style.WebkitFilter = setValue;
+  } else if (setEffect === 'effect-sepia') { // filter: sepia(0..1);
+    setValue = 'sepia(' + setDepth / 100 + ');';
+    imgUploadPreview.style.filter = setValue;
+    imgUploadPreview.style.WebkitFilter = setValue;
+  } else if (setEffect === 'effect-marvin') { // filter: invert(0..100%);
+    setValue = 'invert(' + setDepth + '%);';
+    imgUploadPreview.style.filter = setValue;
+    imgUploadPreview.style.WebkitFilter = setValue;
+  } else if (setEffect === 'effect-phobos') { // filter: blur(0..3px);
+    setValue = 'blur(' + (setDepth / 100) * 3 + 'px);';
+    imgUploadPreview.style.filter = setValue;
+    imgUploadPreview.style.WebkitFilter = setValue;
+  } else if (setEffect === 'effect-heat') { // filter: brightness(1..3).
+    setValue = 'brightness(' + (setDepth / 100) * 3 + ');';
+    imgUploadPreview.style.filter = setValue;
+    imgUploadPreview.style.WebkitFilter = setValue;
+  }
+};
+
+
+// Обработчик фыбора фильтра:
+effectsField.addEventListener('click', function (evt) {
+
+  if (evt.target.nodeName === 'INPUT') {
+    var targetId = evt.target.id; // имя выбранного фильтра
+
+    // Вызываем функцию установки класса фильтра на фотографии с учетом выбранного фильтра
+    setClassEffect(targetId);
+    setClass = targetId;
+
+    // Вызываем функцию установки пин слайдера в исходное состояние - 100%
+    setInitialPin();
+  }
+
+});
+
+// Обработчик перемещения ползунка фильтра:
 effectLevelPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var positionLine = effectLevelLine.getBoundingClientRect(); // Определяем координаты линии перемещения пин фильтра:
-  var widthLine = positionLine.right - positionLine.left;
+  var widthLine = effectLevelLine.getBoundingClientRect().right - effectLevelLine.getBoundingClientRect().left;
   var startPosition = {x: evt.clientX};
-
-  var effectValue = function () {
-    var parametrValue = Math.round((effectLevelPin.offsetLeft) * 100 / (widthLine));
-
-    return parametrValue;
-  };
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
@@ -157,7 +258,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     startPosition = {x: moveEvt.clientX};
     if ((effectLevelPin.offsetLeft - shift.x) < 0) {
       effectLevelPin.style.left = 0 + 'px';
-    } else if ((effectLevelPin.offsetLeft - shift.x) > widthLine) {
+    } else if ((effectLevelPin.offsetLeft - shift.x) > widthRegulation()) {
       effectLevelPin.style.left = widthLine + 'px';
     } else {
       effectLevelPin.style.left = (effectLevelPin.offsetLeft - shift.x) + 'px';
@@ -168,7 +269,11 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
-    effectLevelValue.value = effectValue(); // Выходной параметр
+    // Величина выбранной насыщенности эффекта
+    effectLevelValue.value = effectValue();
+
+    // Устанавливаем интенсивность фильтра взависимости от положения ползунка
+    depthEffect(effectLevelValue.value, setClass);
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
@@ -177,48 +282,4 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-});
-
-// Наложение эффекта:
-var effectsField = document.querySelector('.effects');
-var imgUploadPreview = document.querySelector('.img-upload__preview');
-var currentClassEffect = '';
-
-// Функция установки класса фильтра:
-var setClassEffect = function (currentClass, currentEffects) {
-  if (currentClass) {
-    imgUploadPreview.classList.remove(currentClass);
-  }
-
-  if (currentEffects === 'effect-none') {
-    currentClass = 'hidden';
-    effectLevel.classList.add('hidden');
-  } else if (currentEffects === 'effect-chrome') {
-    currentClass = 'effects__preview--chrome';
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-sepia') {
-    currentClass = 'effects__preview--sepia';
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-marvin') {
-    currentClass = 'effects__preview--marvin';
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-phobos') {
-    currentClass = 'effects__preview--phobos';
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-heat') {
-    currentClass = 'effects__preview--heat';
-    effectLevel.classList.remove('hidden');
-  }
-
-  imgUploadPreview.classList.add(currentClass);
-
-  return currentClass;
-};
-
-effectsField.addEventListener('click', function (evt) {
-  if (evt.target.nodeName === 'INPUT') {
-    var targetId = evt.target.id;
-  }
-
-  currentClassEffect = setClassEffect(currentClassEffect, targetId);
 });
