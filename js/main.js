@@ -130,9 +130,7 @@ buttonUploadOverlayClose.addEventListener('click', function () {
 // Обработчик - показ выбранной фотографии в полноэкранном режиме:
 // Пока не сделал
 
-
-// Алгоритм работы выбора фильтра:
-// 1. Ищем все элементы input в блоке effects;
+// Ищем все элементы input в блоке effects;
 var imgUploadPreview = document.querySelector('.img-upload__preview');
 var effectsField = document.querySelector('.effects');
 var effectsRadio = effectsField.querySelectorAll('.effects__radio');
@@ -142,16 +140,14 @@ var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
 var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
 var setClass = '';
-// 2. Делаем начальный сброс: убираем checked в HTML элементах input (установлен на последнем фильтре);
+// Делаем начальный сброс: убираем checked в HTML элементах input (установлен на последнем фильтре);
 for (var k = 0; k < effectsRadio.length; k++) {
   effectsRadio[k].removeAttribute('checked');
 }
 
-// 3. Устанавливаем свойство checked на первом элементе;
+// Устанавливаем свойство checked на первом элементе;
 effectsRadio[0].checked = true;
 effectLevel.classList.add('hidden');
-
-// 4. Устанавливаем обработчик на клик по блоку input:
 
 // Функция установки класса фильтра на фотографии с учетом выбранного фильтра
 var setClassEffect = function (currentEffects) {
@@ -203,26 +199,23 @@ var depthEffect = function (setDepth, setEffect) {
   var setValue = 0;
 
   if (setEffect === 'effect-chrome') {
-    setValue = 'grayscale(' + setDepth / 100 + ');';
-    imgUploadPreview.style.filter = setValue;
-  } else if (setEffect === 'effect-chrome') {
-    setValue = 'grayscale(' + setDepth / 100 + ');';
+    setValue = 'grayscale(' + setDepth / 100 + ')';
     imgUploadPreview.style.filter = setValue;
     imgUploadPreview.style.WebkitFilter = setValue;
-  } else if (setEffect === 'effect-sepia') { // filter: sepia(0..1);
-    setValue = 'sepia(' + setDepth / 100 + ');';
+  } else if (setEffect === 'effect-sepia') {
+    setValue = 'sepia(' + setDepth / 100 + ')';
     imgUploadPreview.style.filter = setValue;
     imgUploadPreview.style.WebkitFilter = setValue;
-  } else if (setEffect === 'effect-marvin') { // filter: invert(0..100%);
-    setValue = 'invert(' + setDepth + '%);';
+  } else if (setEffect === 'effect-marvin') {
+    setValue = 'invert(' + setDepth + '%)';
     imgUploadPreview.style.filter = setValue;
     imgUploadPreview.style.WebkitFilter = setValue;
-  } else if (setEffect === 'effect-phobos') { // filter: blur(0..3px);
-    setValue = 'blur(' + (setDepth / 100) * 3 + 'px);';
+  } else if (setEffect === 'effect-phobos') {
+    setValue = 'blur(' + (setDepth / 100) * 3 + 'px)';
     imgUploadPreview.style.filter = setValue;
     imgUploadPreview.style.WebkitFilter = setValue;
-  } else if (setEffect === 'effect-heat') { // filter: brightness(1..3).
-    setValue = 'brightness(' + (setDepth / 100) * 3 + ');';
+  } else if (setEffect === 'effect-heat') {
+    setValue = 'brightness(' + (setDepth / 100) * 3 + ')';
     imgUploadPreview.style.filter = setValue;
     imgUploadPreview.style.WebkitFilter = setValue;
   }
