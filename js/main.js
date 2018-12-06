@@ -177,32 +177,11 @@ effectLevel.classList.add('hidden');
 var setClassEffect = function (currentEffects) {
   imgUploadPreview.removeAttribute('class');
   imgUploadPreview.setAttribute('class', 'img-upload__preview');
+  var arrString = currentEffects.split('-');
+  var newNameClass = arrString[0] + '__preview--' + arrString[arrString.length - 1];
 
-  var newNameClass = function (nameClass) {
-    var arrString = nameClass.split('-');
-    var newName = arrString[0] + '__preview--' + arrString[arrString.length - 1];
-
-    return newName;
-  };
-
-  if (currentEffects === 'effect-none') {
-    effectLevel.classList.add('hidden');
-  } else if (currentEffects === 'effect-chrome') {
-    imgUploadPreview.classList.add(newNameClass(currentEffects));
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-sepia') {
-    imgUploadPreview.classList.add(newNameClass(currentEffects));
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-marvin') {
-    imgUploadPreview.classList.add(newNameClass(currentEffects));
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-phobos') {
-    imgUploadPreview.classList.add(newNameClass(currentEffects));
-    effectLevel.classList.remove('hidden');
-  } else if (currentEffects === 'effect-heat') {
-    imgUploadPreview.classList.add(newNameClass(currentEffects));
-    effectLevel.classList.remove('hidden');
-  }
+  imgUploadPreview.classList.add(newNameClass);
+  effectLevel.classList.remove('hidden');
 };
 
 // Функция определения ширины линии регулирования интенсивности эффекта
