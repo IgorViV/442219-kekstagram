@@ -78,7 +78,6 @@ var userPictureClose = function () {
 };
 
 usersPictures.addEventListener('click', function (evt) {
-  // evt.preventDefault();
 
   if (evt.target.tagName === 'IMG') {
     userPictureOpen();
@@ -101,9 +100,7 @@ usersPictures.addEventListener('click', function (evt) {
   }
 });
 
-bigPictureCancel.addEventListener('click', function () {
-  userPictureClose();
-});
+bigPictureCancel.addEventListener('click', userPictureClose);
 
 // Формируем список комментариев под полноэкранной фотографией пользователя:
 var socialComments = document.querySelector('.social__comments');
@@ -153,13 +150,9 @@ var uploadOverlayClose = function () {
   uploadFileInput.value = '';
 };
 
-uploadFileInput.addEventListener('change', function () {
-  uploadOverlayOpen();
-});
+uploadFileInput.addEventListener('change', uploadOverlayOpen);
 
-buttonUploadOverlayClose.addEventListener('click', function () {
-  uploadOverlayClose();
-});
+buttonUploadOverlayClose.addEventListener('click', uploadOverlayClose);
 
 // Ищем все элементы input в блоке effects;
 var imgUploadPreview = document.querySelector('.img-upload__preview');
@@ -185,22 +178,29 @@ var setClassEffect = function (currentEffects) {
   imgUploadPreview.removeAttribute('class');
   imgUploadPreview.setAttribute('class', 'img-upload__preview');
 
+  var newNameClass = function (nameClass) {
+    var arrString = nameClass.split('-');
+    var newName = arrString[0] + '__preview--' + arrString[arrString.length - 1];
+
+    return newName;
+  };
+
   if (currentEffects === 'effect-none') {
     effectLevel.classList.add('hidden');
   } else if (currentEffects === 'effect-chrome') {
-    imgUploadPreview.classList.add('effects__preview--chrome');
+    imgUploadPreview.classList.add(newNameClass(currentEffects));
     effectLevel.classList.remove('hidden');
   } else if (currentEffects === 'effect-sepia') {
-    imgUploadPreview.classList.add('effects__preview--sepia');
+    imgUploadPreview.classList.add(newNameClass(currentEffects));
     effectLevel.classList.remove('hidden');
   } else if (currentEffects === 'effect-marvin') {
-    imgUploadPreview.classList.add('effects__preview--marvin');
+    imgUploadPreview.classList.add(newNameClass(currentEffects));
     effectLevel.classList.remove('hidden');
   } else if (currentEffects === 'effect-phobos') {
-    imgUploadPreview.classList.add('effects__preview--phobos');
+    imgUploadPreview.classList.add(newNameClass(currentEffects));
     effectLevel.classList.remove('hidden');
   } else if (currentEffects === 'effect-heat') {
-    imgUploadPreview.classList.add('effects__preview--heat');
+    imgUploadPreview.classList.add(newNameClass(currentEffects));
     effectLevel.classList.remove('hidden');
   }
 };
@@ -231,25 +231,18 @@ var depthEffect = function (setDepth, setEffect) {
 
   if (setEffect === 'effect-chrome') {
     setValue = 'grayscale(' + setDepth / 100 + ')';
-    imgUploadPreview.style.filter = setValue;
-    imgUploadPreview.style.WebkitFilter = setValue;
   } else if (setEffect === 'effect-sepia') {
     setValue = 'sepia(' + setDepth / 100 + ')';
-    imgUploadPreview.style.filter = setValue;
-    imgUploadPreview.style.WebkitFilter = setValue;
   } else if (setEffect === 'effect-marvin') {
     setValue = 'invert(' + setDepth + '%)';
-    imgUploadPreview.style.filter = setValue;
-    imgUploadPreview.style.WebkitFilter = setValue;
   } else if (setEffect === 'effect-phobos') {
     setValue = 'blur(' + (setDepth / 100) * 3 + 'px)';
-    imgUploadPreview.style.filter = setValue;
-    imgUploadPreview.style.WebkitFilter = setValue;
   } else if (setEffect === 'effect-heat') {
     setValue = 'brightness(' + (setDepth / 100) * 3 + ')';
-    imgUploadPreview.style.filter = setValue;
-    imgUploadPreview.style.WebkitFilter = setValue;
   }
+
+  imgUploadPreview.style.filter = setValue;
+  imgUploadPreview.style.WebkitFilter = setValue;
 };
 
 
