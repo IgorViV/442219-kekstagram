@@ -78,7 +78,7 @@ var userPictureClose = function () {
 };
 
 usersPictures.addEventListener('click', function (evt) {
-  evt.preventDefault();
+  // evt.preventDefault();
 
   if (evt.target.tagName === 'IMG') {
     userPictureOpen();
