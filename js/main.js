@@ -60,13 +60,50 @@ usersPictures.appendChild(fragment);
 
 // Показываем полноэкранную фотографию пользователя с комментариями:
 var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
+var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 
-bigPicture.querySelector('.big-picture__img img').src = usersDescriptionPhotoList[0].url;
-bigPicture.querySelector('.likes-count').textContent = usersDescriptionPhotoList[0].likes;
-bigPicture.querySelector('.comments-count').textContent = usersDescriptionPhotoList[0].comments.length;
-bigPicture.querySelector('.social__caption').textContent = usersDescriptionPhotoList[0].description;
+var escUserPicturePress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    userPictureClose();
+  }
+};
 
+var userPictureOpen = function () {
+  bigPicture.classList.remove('hidden');
+  document.addEventListener('keydown', escUserPicturePress);
+};
+
+var userPictureClose = function () {
+  bigPicture.classList.add('hidden');
+};
+
+usersPictures.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  if (evt.target.tagName === 'IMG') {
+    userPictureOpen();
+
+    // Находим индекс выбранного элемента
+    var arrParentTarget = usersPictures.querySelectorAll('.' + evt.target.parentNode.className);
+
+    for (var l = 0; l < arrParentTarget.length; l++) {
+
+      if (arrParentTarget[l] === evt.target.parentNode) {
+        var indexTarget = l;
+      }
+    }
+
+    bigPicture.querySelector('.big-picture__img img').src = usersDescriptionPhotoList[indexTarget].url;
+    bigPicture.querySelector('.likes-count').textContent = usersDescriptionPhotoList[indexTarget].likes;
+    bigPicture.querySelector('.comments-count').textContent = usersDescriptionPhotoList[indexTarget].comments.length;
+    bigPicture.querySelector('.social__caption').textContent = usersDescriptionPhotoList[indexTarget].description;
+
+  }
+});
+
+bigPictureCancel.addEventListener('click', function () {
+  userPictureClose();
+});
 
 // Формируем список комментариев под полноэкранной фотографией пользователя:
 var socialComments = document.querySelector('.social__comments');
@@ -93,14 +130,11 @@ socialComments.appendChild(fragmentComment);
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
-// ОБРАБОТЧИКИ СОБЫТИЙ
-
-// Обработчик - выбор файла для редактирования:
+// Выбираем файл для редактирования:
 var uploadForm = document.querySelector('.img-upload__form');
 var uploadFileInput = uploadForm.querySelector('#upload-file');
 var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 var buttonUploadOverlayClose = uploadForm.querySelector('.img-upload__cancel');
-
 
 var escOverlayPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
@@ -126,9 +160,6 @@ uploadFileInput.addEventListener('change', function () {
 buttonUploadOverlayClose.addEventListener('click', function () {
   uploadOverlayClose();
 });
-
-// Обработчик - показ выбранной фотографии в полноэкранном режиме:
-// Пока не сделал
 
 // Ищем все элементы input в блоке effects;
 var imgUploadPreview = document.querySelector('.img-upload__preview');
