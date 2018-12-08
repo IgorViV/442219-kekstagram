@@ -177,11 +177,21 @@ effectLevel.classList.add('hidden');
 var setClassEffect = function (currentEffects) {
   imgUploadPreview.removeAttribute('class');
   imgUploadPreview.setAttribute('class', 'img-upload__preview');
-  var arrString = currentEffects.split('-');
-  var newNameClass = arrString[0] + '__preview--' + arrString[arrString.length - 1];
 
-  imgUploadPreview.classList.add(newNameClass);
-  effectLevel.classList.remove('hidden');
+  if (currentEffects !== 'effect-none') {
+    var arrString = currentEffects.split('-');
+    var newNameClass = arrString[0] + '__preview--' + arrString[arrString.length - 1];
+    imgUploadPreview.classList.add(newNameClass);
+    effectLevel.classList.remove('hidden');
+  } else {
+    effectLevel.classList.add('hidden');
+    // Устанавливаем все фильтры в исходное состояние:
+    depthEffect(0, 'effect-chrome');
+    depthEffect(0, 'effect-sepia');
+    depthEffect(0, 'effect-marvin');
+    depthEffect(0, 'effect-phobos');
+    depthEffect(35, 'effect-heat');
+  }
 };
 
 // Функция определения ширины линии регулирования интенсивности эффекта
@@ -229,14 +239,16 @@ var depthEffect = function (setDepth, setEffect) {
 effectsField.addEventListener('click', function (evt) {
 
   if (evt.target.nodeName === 'INPUT') {
-    var targetId = evt.target.id; // имя выбранного фильтра
+    setClass = evt.target.id; // имя выбранного фильтра
 
     // Вызываем функцию установки класса фильтра на фотографии с учетом выбранного фильтра
-    setClassEffect(targetId);
-    setClass = targetId;
+    setClassEffect(setClass);
 
     // Вызываем функцию установки пин слайдера в исходное состояние - 100%
     setInitialPin();
+
+    // Сброс фильтра в исходное состояние
+    depthEffect(100, setClass);
   }
 
 });
