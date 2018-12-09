@@ -58,7 +58,9 @@ for (var i = 0; i < 25; i++) {
 
 usersPictures.appendChild(fragment);
 
+//
 // Показываем полноэкранную фотографию пользователя с комментариями:
+//
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 
@@ -77,6 +79,7 @@ var userPictureClose = function () {
   bigPicture.classList.add('hidden');
 };
 
+// Открываем фотографию пользователя:
 usersPictures.addEventListener('click', function (evt) {
 
   if (evt.target.tagName === 'IMG') {
@@ -127,7 +130,9 @@ socialComments.appendChild(fragmentComment);
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
-// Выбираем файл для редактирования:
+//
+// Загружаем новую фотографию на сайт:
+//
 var uploadForm = document.querySelector('.img-upload__form');
 var uploadFileInput = uploadForm.querySelector('#upload-file');
 var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
@@ -150,11 +155,12 @@ var uploadOverlayClose = function () {
   uploadFileInput.value = '';
 };
 
+// Выбираем изображение для загрузки:
 uploadFileInput.addEventListener('change', uploadOverlayOpen);
 
 buttonUploadOverlayClose.addEventListener('click', uploadOverlayClose);
 
-// Ищем все элементы input в блоке effects;
+// Ищем все переключатели фильтров в блоке effects:
 var imgUploadPreview = document.querySelector('.img-upload__preview');
 var effectsField = document.querySelector('.effects');
 var effectsRadio = effectsField.querySelectorAll('.effects__radio');
@@ -164,16 +170,17 @@ var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
 var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
 var setClass = '';
-// Делаем начальный сброс: убираем checked в HTML элементах input (установлен на последнем фильтре);
+
+// Делаем начальный сброс: убираем checked в переключателях фильтров (установлен на последнем фильтре);
 for (var k = 0; k < effectsRadio.length; k++) {
   effectsRadio[k].removeAttribute('checked');
 }
 
-// Устанавливаем свойство checked на первом элементе;
+// Устанавливаем свойство checked на первом переключателе "Оригинал":
 effectsRadio[0].checked = true;
 effectLevel.classList.add('hidden');
 
-// Функция установки класса фильтра на фотографии с учетом выбранного фильтра
+// Функция установки класса на фотографии с учетом выбранного фильтра
 var setClassEffect = function (currentEffects) {
   imgUploadPreview.removeAttribute('class');
   imgUploadPreview.setAttribute('class', 'img-upload__preview');
@@ -201,7 +208,7 @@ var widthRegulation = function () {
   return widthLine;
 };
 
-// Функция установки пин слайдера в исходное состояние - 100%
+// Функция установки ПИН регулятора в исходное состояние - 100%
 var setInitialPin = function () {
   effectLevelPin.style.left = widthRegulation() + 'px';
   effectLevelDepth.style.width = effectValue() + '%';
@@ -235,7 +242,7 @@ var depthEffect = function (setDepth, setEffect) {
 };
 
 
-// Обработчик фыбора фильтра:
+// Вибираем фильтр:
 effectsField.addEventListener('click', function (evt) {
 
   if (evt.target.nodeName === 'INPUT') {
@@ -253,7 +260,7 @@ effectsField.addEventListener('click', function (evt) {
 
 });
 
-// Обработчик перемещения ползунка фильтра:
+// Перемещаем ПИН регулятора интенсивности фильтра:
 effectLevelPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
   var widthLine = effectLevelLine.getBoundingClientRect().right - effectLevelLine.getBoundingClientRect().left;
@@ -290,4 +297,94 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
+});
+
+//
+// Проверяем хэш-теги:
+//
+var textHashtags = uploadForm.querySelector('.text__hashtags');
+
+// Читаем и проверяем хэш-теги:
+textHashtags.addEventListener('input', function (evt) {
+  var userHashtag = evt.target;
+  var arrHashtags = userHashtag.value.split(' '); // массив хэш-тегов
+  var lengthHashtagTooShort = false; // больше одного символа
+  var lengthHashtagTooLong = false; // меньше (или равно) 20-ти символов
+  var notSymbolHashtag = false; // есть символ #
+  var sameHashtag = false; // нет одинаковых хэш-тегов
+
+  // Проверяем правильность введенных хэш-тегов:
+  for (var n = 0; n < arrHashtags.length; n++) {
+    arrHashtags[n].toLowerCase();
+    if (arrHashtags[n].length < 2) {
+      lengthHashtagTooShort = true;
+    } else if (arrHashtags[n].length > 20) {
+      lengthHashtagTooLong = true;
+    } else {
+      for (var m = 0; m < arrHashtags[n].length; m++) {
+        var arrChar = arrHashtags[n];
+        if (arrChar[0] !== '#') {
+          notSymbolHashtag = true;
+        }
+      }
+    }
+  }
+
+  // Проверяем равенство введенных хэш-тегов:
+  for (var r = 0; r < arrHashtags.length - 1; r++) {
+    var temp = arrHashtags[r];
+    for (var s = r + 1; s < arrHashtags.length; s++) {
+      if (arrHashtags[s] === temp) {
+        sameHashtag = true;
+      }
+    }
+  }
+
+  if (arrHashtags.length > 5) {
+    userHashtag.setCustomValidity('Хэш-тегов не более 5-ти');
+  } else if (lengthHashtagTooShort) {
+    userHashtag.setCustomValidity('Хэш-тег не менее 2-х символов');
+  } else if (lengthHashtagTooLong) {
+    userHashtag.setCustomValidity('Хэш-тег не более 20-ти символов');
+  } else if (notSymbolHashtag) {
+    userHashtag.setCustomValidity('Начало хэш-тега #');
+  } else if (sameHashtag) {
+    userHashtag.setCustomValidity('Не повторяйте хэш-теги');
+  } else {
+    userHashtag.setCustomValidity('');
+  }
+});
+
+//
+// Проверяем комментарии:
+//
+var textDescription = uploadForm.querySelector('.text__description');
+
+textDescription.addEventListener('input', function (evt) {
+  var userComment = evt.target;
+
+  if (textDescription.value.length > 140) {
+    userComment.setCustomValidity('Длина комментариев не более 140 символов');
+  } else {
+    userComment.setCustomValidity('');
+  }
+});
+
+//
+// Блокируем закрытие окна при вводе текста:
+//
+textHashtags.addEventListener('focus', function () {
+  document.removeEventListener('keydown', escOverlayPress);
+});
+
+textHashtags.addEventListener('blur', function () {
+  document.addEventListener('keydown', escOverlayPress);
+});
+
+textDescription.addEventListener('focus', function () {
+  document.removeEventListener('keydown', escOverlayPress);
+});
+
+textDescription.addEventListener('blur', function () {
+  document.addEventListener('keydown', escOverlayPress);
 });
