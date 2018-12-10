@@ -201,6 +201,7 @@ var setClassEffect = function (currentEffects) {
   }
 };
 
+//
 // Функция определения ширины линии регулирования интенсивности эффекта
 var widthRegulation = function () {
   var widthLine = effectLevelLine.getBoundingClientRect().right - effectLevelLine.getBoundingClientRect().left;
@@ -260,6 +261,7 @@ effectsField.addEventListener('click', function (evt) {
 
 });
 
+//
 // Перемещаем ПИН регулятора интенсивности фильтра:
 effectLevelPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
