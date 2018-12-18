@@ -1,39 +1,6 @@
 'use strict';
 
 (function () {
-  //
-  window.errorOpen = function () {
-    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-    var errorCloud = errorTemplate.cloneNode(true);
-    errorCloud.style.zIndex = '3';
-    document.body.appendChild(errorCloud);
-
-    var errorWindowOpened = true;
-
-    var errorWindowClose = function () {
-      if (errorWindowOpened) {
-        document.body.removeChild(errorCloud);
-        errorWindowOpened = false;
-      }
-      // document.removeEventListener('keydown', escOverlayPress);
-    };
-
-    errorCloud.addEventListener('click', function (evt) {
-
-      if (evt.target.tagName === 'BUTTON') {
-        errorWindowClose();
-      }
-    });
-
-    document.body.addEventListener('keydown', function (evt) {
-      window.utilities.isEscEvent(evt, errorWindowClose);
-    });
-
-    document.body.addEventListener('click', function () {
-      errorWindowClose();
-    });
-  };
-
   // Загружаем новую фотографию на сайт:
   var uploadForm = document.querySelector('.img-upload__form');
   var uploadFileInput = uploadForm.querySelector('#upload-file');
@@ -145,25 +112,14 @@
   });
 
   uploadForm.addEventListener('submit', function (evt) {
-    // var main = document.querySelector('#main');
-    // var errorTemplate = document.querySelector('#error').content;
-    // var errorCloud = errorTemplate.cloneNode(true);
-    // main.appendChild(errorCloud);
 
     var onLoad = function () {
       uploadOverlayClose();
-
+      window.message.isSuccess('success');
     };
 
     var onError = function () {
-      document.removeEventListener('keydown', escOverlayPress);
-      window.errorOpen();
-      // var fragment = document.createDocumentFragment();
-      // var errorCloud = errorTemplate.cloneNode(true);
-
-      // fragment.appendChild(errorCloud);
-      // main.insertAdjacentElement('afterbegin', fragment);
-      // main.appendChild(errorCloud);
+      window.message.isError('error');
     };
 
     window.backend.send(new FormData(uploadForm), onLoad, onError);
