@@ -4,6 +4,7 @@
   // Показываем полноэкранную фотографию пользователя с комментариями:
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+  var sectionPictures = document.querySelector('.pictures');
 
   var escUserPicturePress = function (evt) {
     window.utilities.isEscEvent(evt, userPictureClose);
@@ -19,13 +20,13 @@
   };
 
   // Открываем фотографию пользователя:
-  window.pictures.item.addEventListener('click', function (evt) {
+  sectionPictures.addEventListener('click', function (evt) {
 
     if (evt.target.tagName === 'IMG') {
       userPictureOpen();
 
       // Находим индекс выбранного элемента
-      var arrParentTarget = window.pictures.item.querySelectorAll('.' + evt.target.parentNode.className);
+      var arrParentTarget = sectionPictures.querySelectorAll('.' + evt.target.parentNode.className);
 
       for (var l = 0; l < arrParentTarget.length; l++) {
         if (arrParentTarget[l] === evt.target.parentNode) {
@@ -33,34 +34,43 @@
         }
       }
 
-      bigPicture.querySelector('.big-picture__img img').src = window.pictures.arrDescriptions[indexTarget].url;
-      bigPicture.querySelector('.likes-count').textContent = window.pictures.arrDescriptions[indexTarget].likes;
-      bigPicture.querySelector('.comments-count').textContent = window.pictures.arrDescriptions[indexTarget].comments.length;
-      bigPicture.querySelector('.social__caption').textContent = window.pictures.arrDescriptions[indexTarget].description;
+      var onLoad = function (arrPictures) {
+        bigPicture.querySelector('.big-picture__img img').src = arrPictures[indexTarget].url;
+        bigPicture.querySelector('.likes-count').textContent = arrPictures[indexTarget].likes;
+        bigPicture.querySelector('.comments-count').textContent = arrPictures[indexTarget].comments.length;
+        bigPicture.querySelector('.social__caption').textContent = arrPictures[indexTarget].description;
+
+        // Формируем список комментариев под полноэкранной фотографией пользователя:
+        var socialComments = document.querySelector('.social__comments');
+        var commentTemplate = document.querySelector('.social__comment');
+        socialComments.innerHTML = '';
+        var fragmentComment = document.createDocumentFragment();
+
+        var lengthComments = 5; // Максимальное количество отображаемых комментариев
+
+        if (lengthComments > arrPictures[indexTarget].comments.length) {
+          lengthComments = arrPictures[indexTarget].comments.length;
+          // Скрываем счетчик комментариев и возможность загрузки комментариев:
+          bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+          bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+        } else {
+          bigPicture.querySelector('.social__comment-count').classList.remove('visually-hidden');
+          bigPicture.querySelector('.comments-loader').classList.remove('visually-hidden');
+        }
+
+        for (var j = 0; j < lengthComments; j++) {
+          commentTemplate.querySelector('.social__picture').src = arrPictures[indexTarget].comments[j].avatar;
+          commentTemplate.querySelector('.social__text').textContent = arrPictures[indexTarget].comments[j].message;
+
+          fragmentComment.appendChild(commentTemplate.cloneNode(true));
+        }
+
+        socialComments.appendChild(fragmentComment);
+      };
+
+      window.backend.upload(onLoad);
     }
   });
 
   bigPictureCancel.addEventListener('click', userPictureClose);
-
-  // Формируем список комментариев под полноэкранной фотографией пользователя:
-  var socialComments = document.querySelector('.social__comments');
-  var commentTemplate = document.querySelector('.social__comment');
-  socialComments.innerHTML = '';
-  var fragmentComment = document.createDocumentFragment();
-
-  var lengthComments = 5; // Максимальное количество отображаемых комментариев
-
-  for (var j = 0; j < lengthComments; j++) {
-    var indexUser = window.utilities.getRandomInteger(1, 6);
-    commentTemplate.querySelector('.social__picture').src = 'img/avatar-' + indexUser + '.svg';
-    commentTemplate.querySelector('.social__text').textContent = window.pictures.arrDescriptions[0].comments[j];
-
-    fragmentComment.appendChild(commentTemplate.cloneNode(true));
-  }
-
-  socialComments.appendChild(fragmentComment);
-
-  // Скрываем счетчик комментариев и возможность загрузки комментариев:
-  bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
-  bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 })();

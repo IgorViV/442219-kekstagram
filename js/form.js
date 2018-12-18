@@ -6,6 +6,7 @@
   var uploadFileInput = uploadForm.querySelector('#upload-file');
   var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
   var buttonUploadOverlayClose = uploadForm.querySelector('.img-upload__cancel');
+  // var buttonSubmitForm = uploadForm.querySelector('.img-upload__submit');
 
   var escOverlayPress = function (evt) {
     window.utilities.isEscEvent(evt, uploadOverlayClose);
@@ -13,6 +14,7 @@
 
   var uploadOverlayOpen = function () {
     uploadOverlay.classList.remove('hidden');
+    // document.addEventListener('keydown', escOverlayPress);
     document.addEventListener('keydown', escOverlayPress);
   };
 
@@ -108,4 +110,21 @@
   textDescription.addEventListener('blur', function () {
     document.addEventListener('keydown', escOverlayPress);
   });
+
+  uploadForm.addEventListener('submit', function (evt) {
+
+    var onLoad = function () {
+      uploadOverlayClose();
+      window.message.isSuccess('success');
+    };
+
+    var onError = function () {
+      window.message.isError('error');
+    };
+
+    window.backend.send(new FormData(uploadForm), onLoad, onError);
+
+    evt.preventDefault();
+  });
+
 })();
