@@ -19,10 +19,6 @@
     sectionPictures.appendChild(fragment);
   };
 
-  var onError = function (error) {
-    console.log('Ошибка сети: ' + error);
-  };
-
-  window.backend.upload(onLoad, onError);
+  window.backend.upload(onLoad);
 
 })();
