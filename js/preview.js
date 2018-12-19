@@ -72,11 +72,10 @@
       sumCommentsCheck();
 
       renderComments(lengthComments);
-      // Показ дополнительных комментариев
+      // Показ дополнительных комментариев ???
       var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
       buttonCommentsLoader.addEventListener('click', function () {
         sumCommentsCheck();
-        // window.arrPictures[indexTarget].comments.length
       });
     }
   });
