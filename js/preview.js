@@ -42,6 +42,7 @@
       // Формируем список комментариев под полноэкранной фотографией пользователя:
       var socialComments = document.querySelector('.social__comments');
       var commentTemplate = document.querySelector('.social__comment');
+      var tempArrPicturesComments = window.arrPictures[indexTarget].comments.slice();
       var lengthComments = 5; // Максимальное количество отображаемых комментариев
       socialComments.innerHTML = '';
 
@@ -49,22 +50,21 @@
       var renderComments = function (size) {
         var fragmentComment = document.createDocumentFragment();
         for (var i = 0; i < size; i++) {
-          commentTemplate.querySelector('.social__picture').src = window.arrPictures[indexTarget].comments[i].avatar;
-          commentTemplate.querySelector('.social__text').textContent = window.arrPictures[indexTarget].comments[i].message;
+          commentTemplate.querySelector('.social__picture').src = tempArrPicturesComments[i].avatar;
+          commentTemplate.querySelector('.social__text').textContent = tempArrPicturesComments[i].message;
           fragmentComment.appendChild(commentTemplate.cloneNode(true));
         }
         socialComments.appendChild(fragmentComment);
+        tempArrPicturesComments.splice(0, size);
       };
 
       // Функция проверки количества комментариев
       var sumCommentsCheck = function () {
-        if (lengthComments > window.arrPictures[indexTarget].comments.length) {
-          lengthComments = window.arrPictures[indexTarget].comments.length;
-          // Скрываем счетчик комментариев и возможность загрузки комментариев:
-          bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+        if (lengthComments > tempArrPicturesComments.length) {
+          lengthComments = tempArrPicturesComments.length;
+          // Скрываем возможность загрузки комментариев:
           bigPicture.querySelector('.comments-loader').classList.add('hidden');
         } else {
-          bigPicture.querySelector('.social__comment-count').classList.remove('visually-hidden');
           bigPicture.querySelector('.comments-loader').classList.remove('hidden');
         }
       };
@@ -72,10 +72,12 @@
       sumCommentsCheck();
 
       renderComments(lengthComments);
-      // Показ дополнительных комментариев ???
+
+      // Показ дополнительных комментариев
       var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
       buttonCommentsLoader.addEventListener('click', function () {
         sumCommentsCheck();
+        renderComments(lengthComments);
       });
     }
   });
