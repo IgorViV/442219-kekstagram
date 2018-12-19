@@ -73,13 +73,11 @@
 
       renderComments(lengthComments);
       // Показ дополнительных комментариев
-      // var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
-      // buttonCommentsLoader.addEventListener('click', function () {
-      //   var begin = lengthComments;
-      //   var end = window.arrPictures[indexTarget].comments.length;
-      //   window.arrPictures[indexTarget].comments.slice(begin, end);
-      //   renderComments(lengthComments);
-      // });
+      var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
+      buttonCommentsLoader.addEventListener('click', function () {
+        sumCommentsCheck();
+        // window.arrPictures[indexTarget].comments.length
+      });
     }
   });
 
