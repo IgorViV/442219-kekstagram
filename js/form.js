@@ -9,6 +9,7 @@
 
   var escOverlayPress = function (evt) {
     window.utilities.isEscEvent(evt, uploadOverlayClose);
+    window.modify.setBegin();
   };
 
   var uploadOverlayOpen = function () {
