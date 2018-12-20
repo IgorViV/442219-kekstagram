@@ -60,7 +60,7 @@
     for (var r = 0; r < arrHashtags.length - 1; r++) {
       var temp = arrHashtags[r];
       for (var s = r + 1; s < arrHashtags.length; s++) {
-        if (arrHashtags[s] === temp) {
+        if (arrHashtags[s].toLowerCase() === temp.toLowerCase()) {
           sameHashtag = true;
         }
       }
