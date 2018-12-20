@@ -13,7 +13,7 @@
       return firstElement.likes - lastElement.likes;
     };
 
-    var filterToID = {
+    var sortTypeToID = {
       'filter-popular': function () {
         arrPicturesCopy = arrPictures.slice();
 
@@ -51,7 +51,7 @@
         sectionPictures.removeChild(it);
       });
 
-      window.arrPictures = filterToID[buttonFilterActive.getAttribute('ID')]();
+      window.arrPictures = sortTypeToID[buttonFilterActive.getAttribute('ID')]();
 
       for (var i = 0; i < window.arrPictures.length; i++) {
         var userPicture = userPictureTemplate.cloneNode(true);
