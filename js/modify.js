@@ -1,9 +1,6 @@
 'use strict';
-
+// Модуль редактирования фотографии
 (function () {
-  //
-  // Ищем все переключатели фильтров в блоке effects:
-  // modify.js
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var effectsField = document.querySelector('.effects');
   var effectsRadio = effectsField.querySelectorAll('.effects__radio');

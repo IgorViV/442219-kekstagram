@@ -1,5 +1,5 @@
 'use strict';
-
+// Модуль загрузки изображений
 (function () {
   // Загружаем новую фотографию на сайт:
   var uploadForm = document.querySelector('.img-upload__form');
