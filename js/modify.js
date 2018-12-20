@@ -141,8 +141,9 @@
 
   // Функция изменения масштаба изображения на 25%
   var changeScale = function (towardUp, currentValue) {
+    var newValue;
     if (scaleToNumber[currentValue] < 100 && towardUp) {
-      var newValue = scaleToNumber[currentValue] + 25;
+      newValue = scaleToNumber[currentValue] + 25;
     } else if ((scaleToNumber[currentValue] > 25 && !towardUp)) {
       newValue = scaleToNumber[currentValue] - 25;
     } else {
