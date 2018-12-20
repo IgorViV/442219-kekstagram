@@ -20,7 +20,6 @@
   var uploadOverlayClose = function () {
     uploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', escOverlayPress);
-    uploadFileInput.value = '';
   };
 
   // Выбираем изображение для загрузки:
@@ -114,6 +113,7 @@
 
     var onLoad = function () {
       uploadOverlayClose();
+      uploadFileInput.value = '';
       window.message.isSuccess('success');
     };
 
