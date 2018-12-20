@@ -82,9 +82,7 @@
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
-      var lastTimeout = window.setTimeout(function () {
-        renderUsersPictures();
-      }, 500);
+      var lastTimeout = window.setTimeout(renderUsersPictures, 500);
     });
 
   };
