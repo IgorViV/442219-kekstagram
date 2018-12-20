@@ -1,5 +1,5 @@
 'use strict';
-
+// Модуль загрузки изображений
 (function () {
   // Загружаем новую фотографию на сайт:
   var uploadForm = document.querySelector('.img-upload__form');
@@ -14,12 +14,13 @@
   var uploadOverlayOpen = function () {
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', escOverlayPress);
+    // Сброс всех фильтров
+    window.modify.resetFilter();
   };
 
   var uploadOverlayClose = function () {
     uploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', escOverlayPress);
-    uploadFileInput.value = '';
   };
 
   // Выбираем изображение для загрузки:
@@ -59,7 +60,7 @@
     for (var r = 0; r < arrHashtags.length - 1; r++) {
       var temp = arrHashtags[r];
       for (var s = r + 1; s < arrHashtags.length; s++) {
-        if (arrHashtags[s] === temp) {
+        if (arrHashtags[s].toLowerCase() === temp.toLowerCase()) {
           sameHashtag = true;
         }
       }
@@ -113,6 +114,7 @@
 
     var onLoad = function () {
       uploadOverlayClose();
+      uploadFileInput.value = '';
       window.message.isSuccess('success');
     };
 
@@ -124,5 +126,4 @@
 
     evt.preventDefault();
   });
-
 })();

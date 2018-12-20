@@ -1,5 +1,5 @@
 'use strict';
-
+// Модуль общих функций
 window.utilities = (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;

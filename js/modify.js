@@ -1,9 +1,6 @@
 'use strict';
-
-(function () {
-  //
-  // Ищем все переключатели фильтров в блоке effects:
-  // modify.js
+// Модуль редактирования фотографии
+window.modify = (function () {
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var effectsField = document.querySelector('.effects');
   var effectsRadio = effectsField.querySelectorAll('.effects__radio');
@@ -13,15 +10,6 @@
   var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
   var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
   var setClass = '';
-
-  // Делаем начальный сброс: убираем checked в переключателях фильтров (установлен на последнем фильтре);
-  for (var k = 0; k < effectsRadio.length; k++) {
-    effectsRadio[k].removeAttribute('checked');
-  }
-
-  // Устанавливаем свойство checked на первом переключателе "Оригинал":
-  effectsRadio[0].checked = true;
-  effectLevel.classList.add('hidden');
 
   // Функция установки класса на фотографии с учетом выбранного фильтра
   var setClassEffect = function (currentEffects) {
@@ -80,7 +68,7 @@
     imgUploadPreview.style.WebkitFilter = setValue;
   };
 
-  // Вибираем фильтр:
+  // Выбираем фильтр:
   effectsField.addEventListener('click', function (evt) {
     if (evt.target.nodeName === 'INPUT') {
       setClass = evt.target.id;
@@ -125,4 +113,67 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  // Меняем масштаб изображения
+  var buttonScaleSmaller = document.querySelector('.scale__control--smaller');
+  var buttonScaleBigger = document.querySelector('.scale__control--bigger');
+  var valueScaleControl = document.querySelector('.scale__control--value');
+  var imgPreview = document.querySelector('.img-upload__preview img');
+  var scaleToNumber = {
+    '25%': 25,
+    '50%': 50,
+    '75%': 75,
+    '100%': 100
+  };
+
+  // Функция изменения масштаба изображения на 25%
+  var changeScale = function (towardUp, currentValue) {
+    var newValue;
+    if (scaleToNumber[currentValue] < 100 && towardUp) {
+      newValue = scaleToNumber[currentValue] + 25;
+    } else if ((scaleToNumber[currentValue] > 25 && !towardUp)) {
+      newValue = scaleToNumber[currentValue] - 25;
+    } else {
+      newValue = scaleToNumber[currentValue];
+    }
+
+    valueScaleControl.setAttribute('value', newValue + '%');
+    imgPreview.style.transform = 'scale(' + newValue / 100 + ')';
+  };
+
+  // Уменьшаем масштаб
+  buttonScaleSmaller.addEventListener('click', function () {
+    changeScale(false, valueScaleControl.getAttribute('value'));
+  });
+
+  // Увеличиваем масштаб
+  buttonScaleBigger.addEventListener('click', function () {
+    changeScale(true, valueScaleControl.getAttribute('value'));
+  });
+
+  return { // Сброс всех фильтров
+    resetFilter: function () {
+      valueScaleControl.setAttribute('value', '100%');
+      imgPreview.style.transform = 'scale(1.0)';
+
+      // Делаем начальный сброс: убираем checked в переключателях фильтров (установлен на последнем фильтре);
+      for (var k = 0; k < effectsRadio.length; k++) {
+        effectsRadio[k].removeAttribute('checked');
+      }
+
+      // Устанавливаем свойство checked на первом переключателе "Оригинал":
+      effectsRadio[0].checked = true;
+      effectLevel.classList.add('hidden');
+
+      // Вызываем функцию установки пин слайдера в исходное состояние - 100%
+      setInitialPin();
+
+      // Устанавливаем все фильтры в исходное состояние:
+      depthEffect(0, 'effect-chrome');
+      depthEffect(0, 'effect-sepia');
+      depthEffect(0, 'effect-marvin');
+      depthEffect(0, 'effect-phobos');
+      depthEffect(35, 'effect-heat');
+    }
+  };
 })();

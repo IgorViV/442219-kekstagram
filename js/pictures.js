@@ -13,7 +13,7 @@
       return firstElement.likes - lastElement.likes;
     };
 
-    var filterToID = {
+    var sortTypeToID = {
       'filter-popular': function () {
         arrPicturesCopy = arrPictures.slice();
 
@@ -51,7 +51,7 @@
         sectionPictures.removeChild(it);
       });
 
-      window.arrPictures = filterToID[buttonFilterActive.getAttribute('ID')]();
+      window.arrPictures = sortTypeToID[buttonFilterActive.getAttribute('ID')]();
 
       for (var i = 0; i < window.arrPictures.length; i++) {
         var userPicture = userPictureTemplate.cloneNode(true);
@@ -67,10 +67,10 @@
 
     renderUsersPictures();
 
-    // Показываем блок фильтров изображений
+    // Показываем блок фильтров сортировки изображений
     imgFilters.classList.remove('img-filters--inactive');
 
-    // Обработчик фильтров изображеий
+    // Обработчик фильтров сортировки изображеий
     formFilters.addEventListener('click', function (evt) {
       buttonsFilters.forEach(function (it) {
         it.classList.remove('img-filters__button--active');
@@ -82,9 +82,7 @@
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
-      var lastTimeout = window.setTimeout(function () {
-        renderUsersPictures();
-      }, 500);
+      var lastTimeout = window.setTimeout(renderUsersPictures, 500);
     });
 
   };
