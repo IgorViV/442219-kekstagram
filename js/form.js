@@ -6,7 +6,6 @@
   var uploadFileInput = uploadForm.querySelector('#upload-file');
   var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
   var buttonUploadOverlayClose = uploadForm.querySelector('.img-upload__cancel');
-  // var buttonSubmitForm = uploadForm.querySelector('.img-upload__submit');
 
   var escOverlayPress = function (evt) {
     window.utilities.isEscEvent(evt, uploadOverlayClose);
@@ -14,7 +13,6 @@
 
   var uploadOverlayOpen = function () {
     uploadOverlay.classList.remove('hidden');
-    // document.addEventListener('keydown', escOverlayPress);
     document.addEventListener('keydown', escOverlayPress);
   };
 
