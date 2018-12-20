@@ -9,12 +9,13 @@
 
   var escOverlayPress = function (evt) {
     window.utilities.isEscEvent(evt, uploadOverlayClose);
-    window.modify.setBegin();
   };
 
   var uploadOverlayOpen = function () {
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', escOverlayPress);
+    // Сброс всех фильтров
+    window.modify.resetFilter();
   };
 
   var uploadOverlayClose = function () {
@@ -125,5 +126,4 @@
 
     evt.preventDefault();
   });
-
 })();

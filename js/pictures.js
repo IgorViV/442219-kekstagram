@@ -67,10 +67,10 @@
 
     renderUsersPictures();
 
-    // Показываем блок фильтров изображений
+    // Показываем блок фильтров сортировки изображений
     imgFilters.classList.remove('img-filters--inactive');
 
-    // Обработчик фильтров изображеий
+    // Обработчик фильтров сортировки изображеий
     formFilters.addEventListener('click', function (evt) {
       buttonsFilters.forEach(function (it) {
         it.classList.remove('img-filters__button--active');
