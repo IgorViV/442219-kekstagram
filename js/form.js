@@ -42,7 +42,7 @@
     // Проверяем правильность введенных хэш-тегов:
     for (var n = 0; n < arrHashtags.length; n++) {
       arrHashtags[n].toLowerCase();
-      if (arrHashtags[n].length < 2) {
+      if (arrHashtags[n].length < 2 && arrHashtags[n] !== '') {
         lengthHashtagTooShort = true;
       } else if (arrHashtags[n].length > 20) {
         lengthHashtagTooLong = true;
@@ -60,7 +60,7 @@
     for (var r = 0; r < arrHashtags.length - 1; r++) {
       var temp = arrHashtags[r];
       for (var s = r + 1; s < arrHashtags.length; s++) {
-        if (arrHashtags[s].toLowerCase() === temp.toLowerCase()) {
+        if (arrHashtags[s].toLowerCase() === temp.toLowerCase() && arrHashtags[s] !== '') {
           sameHashtag = true;
         }
       }
