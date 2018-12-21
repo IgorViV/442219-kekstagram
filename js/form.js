@@ -114,8 +114,11 @@
 
     var onLoad = function () {
       uploadOverlayClose();
-      uploadFileInput.value = '';
       window.message.isSuccess('success');
+      window.modify.resetFilter();
+      uploadFileInput.value = '';
+      textDescription.value = '';
+      textHashtags.value = '';
     };
 
     var onError = function () {

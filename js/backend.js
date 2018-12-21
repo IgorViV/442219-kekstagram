@@ -47,7 +47,7 @@ window.backend = (function () {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
-      xhr.timeout = 10000;
+      xhr.timeout = window.utilities.TIME_OUT_SEND;
 
       xhr.open('GET', URL_UPLOAD);
       xhr.send();
@@ -72,7 +72,7 @@ window.backend = (function () {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
-      xhr.timeout = 10000;
+      xhr.timeout = window.utilities.TIME_OUT_SEND;
 
       xhr.open('POST', URL_SEND);
       xhr.send(data);

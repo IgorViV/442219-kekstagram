@@ -1,10 +1,11 @@
 'use strict';
 // Модуль редактирования фотографии
 window.modify = (function () {
-  var imgUploadPreview = document.querySelector('.img-upload__preview');
-  var effectsField = document.querySelector('.effects');
+  var imgUpload = document.querySelector('.img-upload__wrapper');
+  var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+  var effectsField = imgUpload.querySelector('.effects');
   var effectsRadio = effectsField.querySelectorAll('.effects__radio');
-  var effectLevel = document.querySelector('.effect-level');
+  var effectLevel = imgUpload.querySelector('.effect-level');
   var effectLevelValue = effectLevel.querySelector('.effect-level__value');
   var effectLevelLine = effectLevel.querySelector('.effect-level__line');
   var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
@@ -28,7 +29,7 @@ window.modify = (function () {
       depthEffect(0, 'effect-sepia');
       depthEffect(0, 'effect-marvin');
       depthEffect(0, 'effect-phobos');
-      depthEffect(35, 'effect-heat');
+      depthEffect(33, 'effect-heat');
     }
   };
 
@@ -41,6 +42,7 @@ window.modify = (function () {
   var setInitialPin = function () {
     effectLevelPin.style.left = widthRegulation() + 'px';
     effectLevelDepth.style.width = effectValue() + '%';
+    effectLevelValue.setAttribute('value', '100');
   };
 
   // Функция расчета величины интенсивности эффекта в зависимости от положения ПИН регулятора
@@ -173,7 +175,7 @@ window.modify = (function () {
       depthEffect(0, 'effect-sepia');
       depthEffect(0, 'effect-marvin');
       depthEffect(0, 'effect-phobos');
-      depthEffect(35, 'effect-heat');
+      depthEffect(33, 'effect-heat');
     }
   };
 })();
