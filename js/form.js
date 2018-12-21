@@ -1,7 +1,7 @@
 'use strict';
 // Модуль загрузки изображений
 (function () {
-  // Загружаем новую фотографию на сайт:
+  // Загружаем новую фотографию на сайт
   var uploadForm = document.querySelector('.img-upload__form');
   var uploadFileInput = uploadForm.querySelector('#upload-file');
   var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
@@ -23,8 +23,18 @@
     document.removeEventListener('keydown', escOverlayPress);
   };
 
-  // Выбираем изображение для загрузки:
-  uploadFileInput.addEventListener('change', uploadOverlayOpen);
+  // Выбираем изображение для загрузки
+  var imgUploadPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
+  var effectsPreview = uploadForm.querySelectorAll('.effects__preview');
+  uploadFileInput.addEventListener('change', handleFiles);
+  function handleFiles(evt) {
+    var file = evt.target.files[0];
+    uploadOverlayOpen();
+    imgUploadPreview.setAttribute('src', 'photos/' + file.name);
+    effectsPreview.forEach(function (it) {
+      it.style.backgroundImage = 'url("photos/' + file.name + '")';
+    });
+  }
 
   buttonUploadOverlayClose.addEventListener('click', uploadOverlayClose);
 
