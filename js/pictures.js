@@ -6,6 +6,10 @@
   var onLoad = function (arrPictures) {
     var arrPicturesCopy;
     var userPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+    var userPicture = userPictureTemplate.cloneNode(true);
+    var userImg = userPicture.querySelector('.picture__img');
+    var userLikes = userPicture.querySelector('.picture__likes');
+    var userComments = userPicture.querySelector('.picture__comments');
     var fragment = document.createDocumentFragment();
 
     var compareElement = function (firstElement, lastElement) {
@@ -54,10 +58,6 @@
       window.arrPictures = sortTypeToID[buttonFilterActive.getAttribute('ID')]();
 
       for (var i = 0; i < window.arrPictures.length; i++) {
-        var userPicture = userPictureTemplate.cloneNode(true);
-        var userImg = userPicture.querySelector('.picture__img');
-        var userLikes = userPicture.querySelector('.picture__likes');
-        var userComments = userPicture.querySelector('.picture__comments');
         userImg.src = window.arrPictures[i].url;
         userLikes.textContent = window.arrPictures[i].likes;
         userComments.textContent = window.arrPictures[i].comments.length;
@@ -74,6 +74,7 @@
     imgFilters.classList.remove('img-filters--inactive');
 
     // Обработчик фильтров сортировки изображеий
+    var lastTimeout = window.setTimeout(renderUsersPictures, window.utilities.TIME_OUT_DEBOUNCE);
     formFilters.addEventListener('click', function (evt) {
       buttonsFilters.forEach(function (it) {
         it.classList.remove('img-filters__button--active');
@@ -85,7 +86,6 @@
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
-      var lastTimeout = window.setTimeout(renderUsersPictures, window.utilities.TIME_OUT_DEBOUNCE);
     });
 
   };

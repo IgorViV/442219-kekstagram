@@ -29,10 +29,11 @@
   uploadFileInput.addEventListener('change', handleFiles);
   function handleFiles(evt) {
     var file = evt.target.files[0];
+    var fileSrc = URL.createObjectURL(file);
     uploadOverlayOpen();
-    imgUploadPreview.src = URL.createObjectURL(file);
+    imgUploadPreview.src = fileSrc;
     effectsPreview.forEach(function (it) {
-      it.style.backgroundImage = 'url("' + URL.createObjectURL(file) + '")';
+      it.style.backgroundImage = 'url("' + fileSrc + '")';
     });
   }
 
