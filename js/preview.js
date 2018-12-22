@@ -2,7 +2,12 @@
 // Модуль отображения полноэкранной фотографии пользователя
 (function () {
   var bigPicture = document.querySelector('.big-picture');
+  var bigPicturePreview = bigPicture.querySelector('.big-picture__img');
+  var bigPicturePreviewImg = bigPicturePreview.querySelector('img');
   var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+  var pictureLikesCount = bigPicture.querySelector('.likes-count');
+  var pictureCommentsCount = bigPicture.querySelector('.comments-count');
+  var pictureSocialDescription = bigPicture.querySelector('.social__caption');
   var sectionPictures = document.querySelector('.pictures');
 
   var escUserPicturePress = function (evt) {
@@ -29,24 +34,27 @@
       }
     }
 
-    bigPicture.querySelector('.big-picture__img img').src = window.arrPictures[indexSelectPicture].url;
-    bigPicture.querySelector('.likes-count').textContent = window.arrPictures[indexSelectPicture].likes;
-    bigPicture.querySelector('.comments-count').textContent = window.arrPictures[indexSelectPicture].comments.length;
-    bigPicture.querySelector('.social__caption').textContent = window.arrPictures[indexSelectPicture].description;
+    bigPicturePreviewImg.src = window.arrPictures[indexSelectPicture].url;
+    pictureLikesCount.textContent = window.arrPictures[indexSelectPicture].likes;
+    pictureCommentsCount.textContent = window.arrPictures[indexSelectPicture].comments.length;
+    pictureSocialDescription.textContent = window.arrPictures[indexSelectPicture].description;
 
     // Формируем список комментариев под полноэкранной фотографией пользователя:
-    var socialComments = document.querySelector('.social__comments');
-    var commentTemplate = document.querySelector('.social__comment');
+    var pictureSocial = bigPicture.querySelector('.big-picture__social');
+    var socialComments = pictureSocial.querySelector('.social__comments');
+    var commentTemplate = socialComments.querySelector('.social__comment');
+    var userAvatarTemplate = commentTemplate.querySelector('.social__picture');
+    var userMessageTemplate = commentTemplate.querySelector('.social__text');
     var tempArrPicturesComments = window.arrPictures[indexSelectPicture].comments.slice();
-    var lengthComments = 5; // Максимальное количество отображаемых комментариев
+    var lengthComments = window.utilities.COMMENTS_SUM_MAX; // Максимальное количество отображаемых комментариев
     socialComments.innerHTML = '';
 
     // Функция отрисовки комментариев
     var renderComments = function (size) {
       var fragmentComment = document.createDocumentFragment();
       for (var i = 0; i < size; i++) {
-        commentTemplate.querySelector('.social__picture').src = tempArrPicturesComments[i].avatar;
-        commentTemplate.querySelector('.social__text').textContent = tempArrPicturesComments[i].message;
+        userAvatarTemplate.src = tempArrPicturesComments[i].avatar;
+        userMessageTemplate.textContent = tempArrPicturesComments[i].message;
         fragmentComment.appendChild(commentTemplate.cloneNode(true));
       }
       socialComments.appendChild(fragmentComment);
@@ -54,13 +62,14 @@
     };
 
     // Функция проверки количества комментариев
+    var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
     var sumCommentsCheck = function () {
       if (lengthComments > tempArrPicturesComments.length) {
         lengthComments = tempArrPicturesComments.length;
         // Скрываем возможность загрузки комментариев:
-        bigPicture.querySelector('.comments-loader').classList.add('hidden');
+        buttonCommentsLoader.classList.add('hidden');
       } else {
-        bigPicture.querySelector('.comments-loader').classList.remove('hidden');
+        buttonCommentsLoader.classList.remove('hidden');
       }
     };
 
@@ -69,7 +78,6 @@
     renderComments(lengthComments);
 
     // Показ дополнительных комментариев
-    var buttonCommentsLoader = bigPicture.querySelector('.comments-loader');
     buttonCommentsLoader.addEventListener('click', function () {
       sumCommentsCheck();
       renderComments(lengthComments);

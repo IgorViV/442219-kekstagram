@@ -25,11 +25,11 @@ window.modify = (function () {
     } else {
       effectLevel.classList.add('hidden');
       // Устанавливаем все фильтры в исходное состояние:
-      depthEffect(0, 'effect-chrome');
-      depthEffect(0, 'effect-sepia');
-      depthEffect(0, 'effect-marvin');
-      depthEffect(0, 'effect-phobos');
-      depthEffect(33, 'effect-heat');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-chrome');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-sepia');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-marvin');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-phobos');
+      depthEffect(window.utilities.EFFECT_BRIGHTNESS_RANGE_FIRST, 'effect-heat');
     }
   };
 
@@ -42,12 +42,12 @@ window.modify = (function () {
   var setInitialPin = function () {
     effectLevelPin.style.left = widthRegulation() + 'px';
     effectLevelDepth.style.width = effectValue() + '%';
-    effectLevelValue.setAttribute('value', '100');
+    effectLevelValue.setAttribute('value', window.utilities.EFFECT_VALUE_MAX);
   };
 
   // Функция расчета величины интенсивности эффекта в зависимости от положения ПИН регулятора
   var effectValue = function () {
-    return Math.round((effectLevelPin.offsetLeft) * 100 / widthRegulation());
+    return Math.round((effectLevelPin.offsetLeft) * window.utilities.EFFECT_RANGE_LAST / widthRegulation());
   };
 
   // Функция установки интенсивности эффекта выбранного фильтра:
@@ -55,15 +55,15 @@ window.modify = (function () {
     var setValue = 0;
 
     if (setEffect === 'effect-chrome') {
-      setValue = 'grayscale(' + setDepth / 100 + ')';
+      setValue = 'grayscale(' + setDepth / window.utilities.EFFECT_RANGE_LAST + ')';
     } else if (setEffect === 'effect-sepia') {
-      setValue = 'sepia(' + setDepth / 100 + ')';
+      setValue = 'sepia(' + setDepth / window.utilities.EFFECT_RANGE_LAST + ')';
     } else if (setEffect === 'effect-marvin') {
       setValue = 'invert(' + setDepth + '%)';
     } else if (setEffect === 'effect-phobos') {
-      setValue = 'blur(' + (setDepth / 100) * 3 + 'px)';
+      setValue = 'blur(' + (setDepth / window.utilities.EFFECT_RANGE_LAST) * window.utilities.EFFECT_SCALE_FACTOR + 'px)';
     } else if (setEffect === 'effect-heat') {
-      setValue = 'brightness(' + (setDepth / 100) * 3 + ')';
+      setValue = 'brightness(' + (setDepth / window.utilities.EFFECT_RANGE_LAST) * window.utilities.EFFECT_SCALE_FACTOR + ')';
     }
 
     imgUploadPreview.style.filter = setValue;
@@ -92,8 +92,8 @@ window.modify = (function () {
       moveEvt.preventDefault();
       var shift = {x: startPosition.x - moveEvt.clientX};
       startPosition = {x: moveEvt.clientX};
-      if ((effectLevelPin.offsetLeft - shift.x) < 0) {
-        effectLevelPin.style.left = 0 + 'px';
+      if ((effectLevelPin.offsetLeft - shift.x) < window.utilities.EFFECT_RANGE_FIRST) {
+        effectLevelPin.style.left = window.utilities.EFFECT_RANGE_FIRST + 'px';
       } else if ((effectLevelPin.offsetLeft - shift.x) > widthRegulation()) {
         effectLevelPin.style.left = widthLine + 'px';
       } else {
@@ -131,16 +131,16 @@ window.modify = (function () {
   // Функция изменения масштаба изображения на 25%
   var changeScale = function (towardUp, currentValue) {
     var newValue;
-    if (scaleToNumber[currentValue] < 100 && towardUp) {
-      newValue = scaleToNumber[currentValue] + 25;
-    } else if ((scaleToNumber[currentValue] > 25 && !towardUp)) {
-      newValue = scaleToNumber[currentValue] - 25;
+    if (scaleToNumber[currentValue] < window.utilities.FILTER_SCALE_MAX && towardUp) {
+      newValue = scaleToNumber[currentValue] + window.utilities.FILTER_SCALE_SHIFT;
+    } else if ((scaleToNumber[currentValue] > window.utilities.FILTER_SCALE_MIN && !towardUp)) {
+      newValue = scaleToNumber[currentValue] - window.utilities.FILTER_SCALE_SHIFT;
     } else {
       newValue = scaleToNumber[currentValue];
     }
 
     valueScaleControl.setAttribute('value', newValue + '%');
-    imgPreview.style.transform = 'scale(' + newValue / 100 + ')';
+    imgPreview.style.transform = 'scale(' + newValue / window.utilities.FILTER_SCALE_MAX + ')';
   };
 
   // Уменьшаем масштаб
@@ -155,7 +155,7 @@ window.modify = (function () {
 
   return { // Сброс всех фильтров
     resetFilter: function () {
-      valueScaleControl.setAttribute('value', '100%');
+      valueScaleControl.setAttribute('value', window.utilities.EFFECT_VALUE_MAX + '%');
       imgPreview.style.transform = 'scale(1.0)';
 
       // Делаем начальный сброс: убираем checked в переключателях фильтров (установлен на последнем фильтре);
@@ -171,11 +171,11 @@ window.modify = (function () {
       setInitialPin();
 
       // Устанавливаем все фильтры в исходное состояние:
-      depthEffect(0, 'effect-chrome');
-      depthEffect(0, 'effect-sepia');
-      depthEffect(0, 'effect-marvin');
-      depthEffect(0, 'effect-phobos');
-      depthEffect(33, 'effect-heat');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-chrome');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-sepia');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-marvin');
+      depthEffect(window.utilities.EFFECT_RANGE_FIRST, 'effect-phobos');
+      depthEffect(window.utilities.EFFECT_BRIGHTNESS_RANGE_FIRST, 'effect-heat');
     }
   };
 })();

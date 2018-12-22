@@ -30,9 +30,9 @@
   function handleFiles(evt) {
     var file = evt.target.files[0];
     uploadOverlayOpen();
-    imgUploadPreview.setAttribute('src', 'photos/' + file.name);
+    imgUploadPreview.src = URL.createObjectURL(file);
     effectsPreview.forEach(function (it) {
-      it.style.backgroundImage = 'url("photos/' + file.name + '")';
+      it.style.backgroundImage = 'url("' + URL.createObjectURL(file) + '")';
     });
   }
 
@@ -52,9 +52,9 @@
     // Проверяем правильность введенных хэш-тегов:
     for (var n = 0; n < arrHashtags.length; n++) {
       arrHashtags[n].toLowerCase();
-      if (arrHashtags[n].length < 2 && arrHashtags[n] !== '') {
+      if (arrHashtags[n].length < window.utilities.HASHTAG_LENGTH_MIN && arrHashtags[n] !== '') {
         lengthHashtagTooShort = true;
-      } else if (arrHashtags[n].length > 20) {
+      } else if (arrHashtags[n].length > window.utilities.HASHTAG_LENGTH_MAX) {
         lengthHashtagTooLong = true;
       } else {
         for (var m = 0; m < arrHashtags[n].length; m++) {
@@ -76,7 +76,7 @@
       }
     }
 
-    if (arrHashtags.length > 5) {
+    if (arrHashtags.length > window.utilities.HASHTAGS_SUM_MAX) {
       userHashtag.setCustomValidity('Хэш-тегов не более 5-ти');
     } else if (lengthHashtagTooShort) {
       userHashtag.setCustomValidity('Хэш-тег не менее 2-х символов');
@@ -96,7 +96,7 @@
   textDescription.addEventListener('input', function (evt) {
     var userComment = evt.target;
 
-    if (textDescription.value.length > 140) {
+    if (textDescription.value.length > window.utilities.DESCRIPTION_LENGTH_MAX) {
       userComment.setCustomValidity('Длина комментариев не более 140 символов');
     } else {
       userComment.setCustomValidity('');
