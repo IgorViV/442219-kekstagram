@@ -74,7 +74,7 @@
     imgFilters.classList.remove('img-filters--inactive');
 
     // Обработчик фильтров сортировки изображеий
-    var lastTimeout = window.setTimeout(renderUsersPictures, window.utilities.TIME_OUT_DEBOUNCE);
+    var lastTimeout;
     formFilters.addEventListener('click', function (evt) {
       buttonsFilters.forEach(function (it) {
         it.classList.remove('img-filters__button--active');
@@ -86,6 +86,7 @@
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
+      lastTimeout = window.setTimeout(renderUsersPictures, window.utilities.TIME_OUT_DEBOUNCE);
     });
 
   };
