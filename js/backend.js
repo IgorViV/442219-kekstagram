@@ -13,19 +13,19 @@ window.backend = (function () {
       xhr.addEventListener('load', function () {
         var error;
         switch (xhr.status) {
-          case 200:
+          case window.utilities.CODE_SUCCESS:
             onLoad(xhr.response);
             break;
 
-          case 400:
+          case window.utilities.CODE_BAD_REQUEST:
             error = 'Неверный запрос';
             break;
 
-          case 401:
+          case window.utilities.CODE_UNAUTHORIZED:
             error = 'Пользователь не авторизован';
             break;
 
-          case 404:
+          case window.utilities.CODE_NOT_FROUND_ERROR:
             error = 'Ничего не найдено';
             break;
 
@@ -47,7 +47,7 @@ window.backend = (function () {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
-      xhr.timeout = 10000;
+      xhr.timeout = window.utilities.TIME_OUT_SEND;
 
       xhr.open('GET', URL_UPLOAD);
       xhr.send();
@@ -57,7 +57,7 @@ window.backend = (function () {
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === window.utilities.CODE_SUCCESS) {
           onLoad(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -72,7 +72,7 @@ window.backend = (function () {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
-      xhr.timeout = 10000;
+      xhr.timeout = window.utilities.TIME_OUT_SEND;
 
       xhr.open('POST', URL_SEND);
       xhr.send(data);

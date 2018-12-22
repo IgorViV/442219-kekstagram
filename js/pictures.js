@@ -6,6 +6,10 @@
   var onLoad = function (arrPictures) {
     var arrPicturesCopy;
     var userPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+    var userPicture = userPictureTemplate.cloneNode(true);
+    var userImg = userPicture.querySelector('.picture__img');
+    var userLikes = userPicture.querySelector('.picture__likes');
+    var userComments = userPicture.querySelector('.picture__comments');
     var fragment = document.createDocumentFragment();
 
     var compareElement = function (firstElement, lastElement) {
@@ -20,8 +24,8 @@
         return arrPicturesCopy;
       },
       'filter-new': function () {
-        var begin = window.utilities.getRandomInteger(0, 15);
-        var end = begin + 10;
+        var begin = window.utilities.getRandomInteger(window.utilities.FILTER_NEW_MIN, window.utilities.FILTER_NEW_MAX);
+        var end = begin + window.utilities.FILTER_NEW_SHIFT;
         arrPicturesCopy = arrPictures.slice(begin, end);
 
         return arrPicturesCopy;
@@ -54,10 +58,9 @@
       window.arrPictures = sortTypeToID[buttonFilterActive.getAttribute('ID')]();
 
       for (var i = 0; i < window.arrPictures.length; i++) {
-        var userPicture = userPictureTemplate.cloneNode(true);
-        userPicture.querySelector('.picture__img').src = window.arrPictures[i].url;
-        userPicture.querySelector('.picture__likes').textContent = window.arrPictures[i].likes;
-        userPicture.querySelector('.picture__comments').textContent = window.arrPictures[i].comments.length;
+        userImg.src = window.arrPictures[i].url;
+        userLikes.textContent = window.arrPictures[i].likes;
+        userComments.textContent = window.arrPictures[i].comments.length;
 
         fragment.appendChild(userPicture);
       }
@@ -71,6 +74,7 @@
     imgFilters.classList.remove('img-filters--inactive');
 
     // Обработчик фильтров сортировки изображеий
+    var lastTimeout;
     formFilters.addEventListener('click', function (evt) {
       buttonsFilters.forEach(function (it) {
         it.classList.remove('img-filters__button--active');
@@ -82,7 +86,7 @@
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
-      var lastTimeout = window.setTimeout(renderUsersPictures, 500);
+      lastTimeout = window.setTimeout(renderUsersPictures, window.utilities.TIME_OUT_DEBOUNCE);
     });
 
   };

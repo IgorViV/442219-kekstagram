@@ -1,7 +1,7 @@
 'use strict';
 // Модуль загрузки изображений
 (function () {
-  // Загружаем новую фотографию на сайт:
+  // Загружаем новую фотографию на сайт
   var uploadForm = document.querySelector('.img-upload__form');
   var uploadFileInput = uploadForm.querySelector('#upload-file');
   var uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
@@ -23,8 +23,19 @@
     document.removeEventListener('keydown', escOverlayPress);
   };
 
-  // Выбираем изображение для загрузки:
-  uploadFileInput.addEventListener('change', uploadOverlayOpen);
+  // Выбираем изображение для загрузки
+  var imgUploadPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
+  var effectsPreview = uploadForm.querySelectorAll('.effects__preview');
+  uploadFileInput.addEventListener('change', handleFiles);
+  function handleFiles(evt) {
+    var file = evt.target.files[0];
+    var fileSrc = URL.createObjectURL(file);
+    uploadOverlayOpen();
+    imgUploadPreview.src = fileSrc;
+    effectsPreview.forEach(function (it) {
+      it.style.backgroundImage = 'url("' + fileSrc + '")';
+    });
+  }
 
   buttonUploadOverlayClose.addEventListener('click', uploadOverlayClose);
 
@@ -42,9 +53,9 @@
     // Проверяем правильность введенных хэш-тегов:
     for (var n = 0; n < arrHashtags.length; n++) {
       arrHashtags[n].toLowerCase();
-      if (arrHashtags[n].length < 2) {
+      if (arrHashtags[n].length < window.utilities.HASHTAG_LENGTH_MIN && arrHashtags[n] !== '') {
         lengthHashtagTooShort = true;
-      } else if (arrHashtags[n].length > 20) {
+      } else if (arrHashtags[n].length > window.utilities.HASHTAG_LENGTH_MAX) {
         lengthHashtagTooLong = true;
       } else {
         for (var m = 0; m < arrHashtags[n].length; m++) {
@@ -60,13 +71,13 @@
     for (var r = 0; r < arrHashtags.length - 1; r++) {
       var temp = arrHashtags[r];
       for (var s = r + 1; s < arrHashtags.length; s++) {
-        if (arrHashtags[s].toLowerCase() === temp.toLowerCase()) {
+        if (arrHashtags[s].toLowerCase() === temp.toLowerCase() && arrHashtags[s] !== '') {
           sameHashtag = true;
         }
       }
     }
 
-    if (arrHashtags.length > 5) {
+    if (arrHashtags.length > window.utilities.HASHTAGS_SUM_MAX) {
       userHashtag.setCustomValidity('Хэш-тегов не более 5-ти');
     } else if (lengthHashtagTooShort) {
       userHashtag.setCustomValidity('Хэш-тег не менее 2-х символов');
@@ -86,7 +97,7 @@
   textDescription.addEventListener('input', function (evt) {
     var userComment = evt.target;
 
-    if (textDescription.value.length > 140) {
+    if (textDescription.value.length > window.utilities.DESCRIPTION_LENGTH_MAX) {
       userComment.setCustomValidity('Длина комментариев не более 140 символов');
     } else {
       userComment.setCustomValidity('');
@@ -114,8 +125,11 @@
 
     var onLoad = function () {
       uploadOverlayClose();
-      uploadFileInput.value = '';
       window.message.isSuccess('success');
+      window.modify.resetFilter();
+      uploadFileInput.value = '';
+      textDescription.value = '';
+      textHashtags.value = '';
     };
 
     var onError = function () {

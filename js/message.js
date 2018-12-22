@@ -4,7 +4,7 @@ window.message = (function () {
   var showMessage = function (templateName) {
     var errorTemplate = document.querySelector('#' + templateName).content.querySelector('.' + templateName);
     var errorCloud = errorTemplate.cloneNode(true);
-    errorCloud.style.zIndex = '3';
+    errorCloud.style.zIndex = window.utilities.ERROR_POSITIN_INDEX;
     document.body.appendChild(errorCloud);
 
     var errorWindowOpened = true;
